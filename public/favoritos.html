@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,17 +20,21 @@
             <h1><a href="index.html">ROLE & PLAY</a></h1>
         </div>
 
-        <ul class="nav justify-content-end">
-            <li class="nav-item">
-                <a class="nav-link" href="index.html">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="cadastro_itens.html">Cadastro</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="login.html">Login/Logout</a>
-            </li>
-        </ul>
+        <div class="d-flex align-items-center">
+            <span id="msg-usuario" class="text-light me-3 d-none small"></span>
+
+            <ul class="nav justify-content-end">
+                <li class="nav-item" id="menu-favoritos">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item" id="menu-cadastro">
+                    <a class="nav-link" href="cadastro_itens.html">Cadastro</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="menu-login" onclick="gerenciarLoginLogout()">Login</a>
+                </li>
+            </ul>
+        </div>
     </header>
 
     <main class="container my-5">
@@ -63,10 +68,6 @@
                         </div>
                     </div>
                 </div>
-                </div>
-
-            <div class="text-center mt-4">
-                <p class="text-muted">Seus itens favoritos aparecerão aqui.</p>
             </div>
         </section>
     </main>

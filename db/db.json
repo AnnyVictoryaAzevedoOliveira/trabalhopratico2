@@ -52,7 +52,7 @@
       "descricao": "Fantasia Medieval, Sci-Fi, Terror? Aprenda a identificar qual sistema (como D&D, Tormenta, Call of Cthulhu) se encaixa melhor no seu estilo e no da sua mesa.",
       "conteudo": "Cada sistema de RPG define como as regras funcionam — o que pode ou não ser feito, como testar ações e como contar a história.\nPara escolher o ideal, pense em:\n- Tema: fantasia medieval, mistério, horror, ficção científica, realismo urbano, etc.\n- Estilo de jogo: narrativo, estratégico, rápido, investigativo, cooperativo…\n- Complexidade: sistemas simples como Fate ou Veridice são ótimos para iniciantes; já D&D e Pathfinder oferecem mais detalhes táticos.\n\nNão existe um 'melhor sistema' — o ideal é aquele que combina com o grupo e com o tipo de história que vocês querem contar.",
       "destaque": true,
-      "categoria":"Guias e Tutoriais",
+      "categoria": "Guias e Tutoriais",
       "imagem_principal": "assets/img/rpg-books.jpg",
       "atracoes": [
         {
@@ -146,7 +146,7 @@
       "descricao": "Guia passo a passo para montar sua ficha de personagem do zero, definindo atributos, habilidades e o histórico que dará vida ao seu herói (ou vilão)!",
       "conteudo": "A ficha de personagem é o coração do seu herói — o registro de tudo o que ele é e pode fazer dentro do jogo. Ela define atributos como força, inteligência ou carisma; anota habilidades especiais; guarda itens, pontos de vida e até a história pessoal do personagem.\n\nCada sistema de RPG tem seu próprio formato de ficha, mas todos seguem a mesma ideia: representar o que seu personagem sabe, sente e pode realizar. Em sistemas como D&D, isso é feito com números e classes; em outros, como Fate ou Call of Cthulhu, a ênfase está em aspectos narrativos e traços de personalidade.\n\nAo criar sua ficha, pense em quem é o seu personagem, o que ele deseja e quais são suas limitações. O equilíbrio entre mecânica e interpretação é o que transforma simples números em uma história viva e cheia de emoção.",
       "destaque": true,
-      "categoria":"Guias e Tutoriais",
+      "categoria": "Guias e Tutoriais",
       "imagem_principal": "assets/img/ficha rpg.jpg",
       "atracoes": [
         {
@@ -228,6 +228,22 @@
       "nome": "Usuario Comum",
       "email": "user@abc.com",
       "admin": false
+    },
+    {
+      "login": "Audax_Virtus",
+      "senha": "Veridice@12",
+      "nome": "Audax Virtus ",
+      "email": "annyvictoryaaoliveira@gmail.com",
+      "admin": false,
+      "id": "9-BwGzq"
+    },
+    {
+      "login": "aud",
+      "senha": "123",
+      "nome": "aud",
+      "email": "anny@gmail.com",
+      "admin": false,
+      "id": "X0UEbIg"
     }
   ],
   "favoritos": []

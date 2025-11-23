@@ -20,22 +20,27 @@
             <h1><a href="index.html">ROLE & PLAY</a></h1>
         </div>
 
-        <ul class="nav justify-content-end">
-            <li class="nav-item">
-                <a class="nav-link" href="cadastro_itens.html">Cadastro</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="favoritos.html">Favoritos</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="login.html">Login/Logout</a>
-            </li>
-        </ul>
+        <div class="d-flex align-items-center">
+            <span id="msg-usuario" class="text-light me-3 d-none small"></span>
+
+            <ul class="nav justify-content-end">
+                <li class="nav-item" id="menu-cadastro">
+                    <a class="nav-link" href="cadastro_itens.html">Cadastro</a>
+                </li>
+                <li class="nav-item" id="menu-favoritos">
+                    <a class="nav-link" href="favoritos.html">Favoritos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="menu-login" onclick="gerenciarLoginLogout()">Login</a>
+                </li>
+            </ul>
+        </div>
     </header>
 
 
     <main>
         <section>
+            <br>
             <h2 class="mb-3 border-bottom pb-2">Itens em Destaque</h2>
             <div id="carouselExampleCaptions" class="carousel slide">
                 <div class="carousel-indicators">
@@ -95,8 +100,8 @@
         </section>
 
         <section>
+            <br>
             <h2 class="mb-3 border-bottom pb-2">Todos os Itens</h2>
-
             <div class="d-flex justify-content-end mb-3">
                 <form class="d-flex" role="search" id="form-pesquisa">
                     <input class="form-control me-2" type="search" id="input-pesquisa" placeholder="Pesquisar..."
@@ -111,6 +116,7 @@
         </section>
 
         <section>
+            <br>
             <h2 class="mb-3 border-bottom pb-2">Estatísticas do Conteúdo</h2>
             <div class="bg-light p-4 rounded shadow-sm" style="height: 400px; position: relative;">
                 <canvas id="grafico-itens"></canvas>

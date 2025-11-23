@@ -1,24 +1,106 @@
 const BASE_URL = 'http://localhost:3000';
 let dados = { cards: [] };
+let atracoesTemp = []; 
+
+// --- 1. Sessão e Interface ---
+
+function verificarSessao() {
+    const usuarioLogado = JSON.parse(sessionStorage.getItem('usuarioLogado'));
+    
+    const menuCadastro = document.getElementById('menu-cadastro');
+    const menuFavoritos = document.getElementById('menu-favoritos');
+    const menuLoginLink = document.getElementById('menu-login');
+    const msgUsuario = document.getElementById('msg-usuario');
+    const path = window.location.pathname;
+    
+    if (usuarioLogado) {
+        if(menuCadastro) menuCadastro.classList.remove('d-none');
+        if(menuFavoritos) menuFavoritos.classList.remove('d-none');
+        if(menuLoginLink) {
+            menuLoginLink.innerText = "Logout";
+            menuLoginLink.href = "#"; 
+        }
+        if(msgUsuario) {
+            msgUsuario.innerText = `Olá, ${usuarioLogado.nome}`;
+            msgUsuario.classList.remove('d-none');
+        }
+    } else {
+        if(menuCadastro) menuCadastro.classList.add('d-none');
+        if(menuFavoritos) menuFavoritos.classList.add('d-none');
+        if(menuLoginLink) {
+            menuLoginLink.innerText = "Login";
+            menuLoginLink.href = "login.html";
+        }
+        if(msgUsuario) msgUsuario.classList.add('d-none');
+
+        if (path.includes("cadastro_itens.html") || path.includes("favoritos.html")) {
+            alert("Você precisa estar logado para acessar esta página.");
+            window.location.href = "login.html";
+        }
+    }
+}
+
+function gerenciarLoginLogout() {
+    const usuarioLogado = sessionStorage.getItem('usuarioLogado');
+    if (usuarioLogado) {
+        if(confirm("Deseja realmente sair?")) {
+            sessionStorage.removeItem('usuarioLogado');
+            verificarSessao();
+            window.location.href = "index.html"; 
+        }
+    } else {
+        window.location.href = "login.html";
+    }
+}
+
+// --- 2. Favoritos (LÓGICA ATUALIZADA POR USUÁRIO) ---
+
+// Função auxiliar para pegar a chave correta no LocalStorage
+function getChaveFavoritos() {
+    const usuarioLogado = JSON.parse(sessionStorage.getItem('usuarioLogado'));
+    if (usuarioLogado && usuarioLogado.id) {
+        // Se tem usuário, cria uma chave única com o ID dele (ex: favoritos_user_123)
+        return `favoritos_user_${usuarioLogado.id}`;
+    }
+    // Se não tem usuário logado, usa uma chave genérica de visitante
+    return 'favoritos_visitante';
+}
 
 function getFavoritos() {
-    return JSON.parse(localStorage.getItem('meusFavoritos')) || [];
+    const chave = getChaveFavoritos();
+    return JSON.parse(localStorage.getItem(chave)) || [];
 }
 
 function salvarFavoritos(listaIds) {
-    localStorage.setItem('meusFavoritos', JSON.stringify(listaIds));
+    const chave = getChaveFavoritos();
+    localStorage.setItem(chave, JSON.stringify(listaIds));
 }
 
 function toggleFavorito(id) {
+    // Verifica se está logado antes de deixar favoritar
+    const usuarioLogado = sessionStorage.getItem('usuarioLogado');
+    if (!usuarioLogado) {
+        alert("Você precisa fazer login para adicionar aos favoritos!");
+        window.location.href = "login.html";
+        return;
+    }
+
     let favoritos = getFavoritos();
     const index = favoritos.indexOf(id);
+    
     if (index !== -1) {
-        favoritos.splice(index, 1);
+        favoritos.splice(index, 1); // Remove
     } else {
-        favoritos.push(id);
+        favoritos.push(id); // Adiciona
     }
+    
     salvarFavoritos(favoritos);
     atualizarBotoesFavorito();
+    
+    // Se estiver na página de favoritos, recarrega a lista imediatamente
+    if(window.location.pathname.includes("favoritos.html")) {
+        gerarFavoritos();
+    }
 }
 
 function verificarFavorito(id) {
@@ -26,9 +108,11 @@ function verificarFavorito(id) {
     return favoritos.includes(id);
 }
 
+// --- 3. Carregamento ---
+
 async function carregarDados() {
     try {
-        const response = await fetch(`${BASE_URL}/cards`);
+        const response = await fetch(`${BASE_URL}/cards`, { cache: 'no-store' });
         if (!response.ok) throw new Error('Erro ao conectar com o servidor');
         
         const cardsData = await response.json();
@@ -39,6 +123,8 @@ async function carregarDados() {
         console.error("Erro ao buscar dados:", error);
     }
 }
+
+// --- 4. Renderização ---
 
 function gerarCards(lista = dados.cards) {
     const container = document.getElementById('cards-container');
@@ -57,9 +143,11 @@ function gerarCards(lista = dados.cards) {
 
         const col = document.createElement('div');
         col.className = 'col';
+        
         col.innerHTML = `
             <div class="card h-100">
-                <img src="${card.imagem_principal}" class="card-img-top" alt="${card.nome}">
+                <img src="${card.imagem_principal}" class="card-img-top" alt="${card.nome}" 
+                     onerror="this.onerror=null; this.src='https://placehold.co/600x400/160d24/FFF?text=Erro+Imagem';">
                 <div class="card-body">
                     <h5 class="card-title">${card.nome}</h5>
                     <p class="card-text">${card.descricao}</p>
@@ -91,7 +179,8 @@ function gerarFavoritos() {
         col.className = 'col';
         col.innerHTML = `
             <div class="card h-100 border-danger">
-                <img src="${card.imagem_principal}" class="card-img-top" alt="${card.nome}">
+                <img src="${card.imagem_principal}" class="card-img-top" alt="${card.nome}" 
+                     onerror="this.onerror=null; this.src='https://placehold.co/600x400/160d24/FFF?text=Erro+Imagem';">
                 <div class="card-body">
                     <h5 class="card-title">${card.nome}</h5>
                     <p class="card-text">${card.descricao}</p>
@@ -120,9 +209,14 @@ function mostrarDetalhe() {
 
         container.innerHTML = `
             <div class="detalhe-container">
-                <div class="imagem"><img src="${card.imagem_principal}" alt="${card.nome}"></div>
+                <div class="imagem">
+                    <img src="${card.imagem_principal}" alt="${card.nome}" 
+                         onerror="this.onerror=null; this.src='https://placehold.co/600x400/160d24/FFF?text=Erro+Imagem';">
+                </div>
                 <div class="conteudo">
                     <h2>${card.nome}</h2>
+                    <span class="badge bg-secondary mb-3">${card.categoria || 'Geral'}</span>
+                    <br>
                     <button class="btn ${btnFavClass} mb-3" onclick="acaoFavoritar(${card.id})">${btnFavTexto}</button>
                     <p class="descricao">${card.descricao}</p>
                     <p class="conteudo-texto">${card.conteudo ? card.conteudo.replace(/\n/g, "<br>") : ''}</p>
@@ -139,7 +233,8 @@ function mostrarDetalhe() {
                     col.className = "col";
                     col.innerHTML = `
                         <div class="card h-100 shadow-sm">
-                            <img src="${item.imagem}" class="card-img-top" alt="Imagem associada">
+                            <img src="${item.imagem}" class="card-img-top" alt="Imagem associada" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/600x400/160d24/FFF?text=Erro+Imagem';">
                             <div class="card-body"><p class="card-text text-center small text-muted">${item.descricao}</p></div>
                         </div>`;
                     fotosContainer.appendChild(col);
@@ -153,6 +248,67 @@ function mostrarDetalhe() {
     }
 }
 
+// --- 5. Gerenciamento de Fotos (Galeria) ---
+
+function atualizarPreviewImagem() {
+    const input = document.getElementById('item-imagem');
+    const preview = document.getElementById('preview-img-principal');
+    if (input && preview) {
+        preview.style.opacity = '1';
+        preview.src = input.value;
+        preview.onerror = function() {
+            this.style.opacity = '0';
+        }
+    }
+}
+
+function adicionarAtracaoTemp() {
+    const urlInput = document.getElementById('atracao-url');
+    const descInput = document.getElementById('atracao-desc');
+    const url = urlInput.value;
+    const desc = descInput.value;
+
+    if (!url || !desc) {
+        alert("Preencha a URL e a Descrição para adicionar a foto.");
+        return;
+    }
+    atracoesTemp.push({ imagem: url, descricao: desc });
+    renderizarAtracoesTemp();
+    urlInput.value = '';
+    descInput.value = '';
+}
+
+function removerAtracaoTemp(index) {
+    atracoesTemp.splice(index, 1);
+    renderizarAtracoesTemp();
+}
+
+function renderizarAtracoesTemp() {
+    const lista = document.getElementById('lista-atracoes-temp');
+    if (!lista) return;
+
+    lista.innerHTML = '';
+    atracoesTemp.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+        li.style.backgroundColor = '#160d24'; 
+        li.style.color = '#fff';
+        li.style.border = '1px solid #3d2b54';
+
+        li.innerHTML = `
+            <div class="d-flex align-items-center">
+                <img src="${item.imagem}" alt="img" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px; border-radius: 4px;" 
+                     onerror="this.onerror=null;this.src='https://placehold.co/40?text=X';">
+                <span>${item.descricao}</span>
+            </div>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removerAtracaoTemp(${index})">X</button>
+        `;
+        lista.appendChild(li);
+    });
+}
+
+// --- 6. CRUD ---
+
 function gerarTabelaGerenciamento() {
     const tbody = document.getElementById('tabela-itens-body');
     if (!tbody) return;
@@ -164,7 +320,9 @@ function gerarTabelaGerenciamento() {
         tr.innerHTML = `
             <td>${card.id}</td>
             <td>${card.nome}</td>
-            <td><img src="${card.imagem_principal}" alt="img" style="height: 40px;"></td>
+            <td>${card.categoria || '-'}</td>
+            <td><img src="${card.imagem_principal}" alt="img" style="height: 40px;" 
+                     onerror="this.onerror=null;this.src='https://placehold.co/40?text=Err';"></td>
             <td>
                 <button class="btn btn-warning btn-sm me-2" onclick="prepararEdicao(${card.id})">Editar</button>
                 <button class="btn btn-danger btn-sm" onclick="excluirItem(${card.id})">Excluir</button>
@@ -176,29 +334,40 @@ function gerarTabelaGerenciamento() {
 
 async function salvarItem(event) {
     event.preventDefault(); 
-    const id = document.getElementById('item-id').value;
+    
+    const idManual = document.getElementById('item-id').value; 
+    const isEditingId = document.getElementById('is-editing').value; 
+
     const nome = document.getElementById('item-nome').value;
+    const categoria = document.getElementById('item-categoria').value; 
     const descricao = document.getElementById('item-descricao').value;
     const imagem = document.getElementById('item-imagem').value;
     const conteudo = document.getElementById('item-conteudo').value;
 
     const novoItem = {
+        id: parseInt(idManual), 
         nome: nome,
+        categoria: categoria, 
         descricao: descricao,
         imagem_principal: imagem,
         conteudo: conteudo,
-        atracoes: [] 
+        atracoes: atracoesTemp 
     };
 
     try {
         let response;
-        if (id) {
-            response = await fetch(`${BASE_URL}/cards/${id}`, {
-                method: 'PUT', // ou 'PATCH'
+        if (isEditingId) {
+            response = await fetch(`${BASE_URL}/cards/${isEditingId}`, {
+                method: 'PUT', 
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...novoItem, id: parseInt(id) }) 
+                body: JSON.stringify(novoItem) 
             });
         } else {
+            const check = await fetch(`${BASE_URL}/cards/${idManual}`, { cache: 'no-store' });
+            if (check.ok) {
+                alert("Erro: Já existe um item com este ID. Escolha outro.");
+                return;
+            }
             response = await fetch(`${BASE_URL}/cards`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -209,7 +378,10 @@ async function salvarItem(event) {
         if (response.ok) {
             alert('Item salvo com sucesso!');
             limparFormulario();
-            carregarDados(); 
+            await carregarDados(); 
+            if (document.getElementById('tabela-itens-body')) {
+                gerarTabelaGerenciamento();
+            }
         } else {
             alert('Erro ao salvar item.');
         }
@@ -224,12 +396,45 @@ function prepararEdicao(id) {
 
     document.getElementById('item-id').value = card.id;
     document.getElementById('item-nome').value = card.nome;
+    document.getElementById('item-categoria').value = card.categoria || ""; 
     document.getElementById('item-descricao').value = card.descricao;
     document.getElementById('item-imagem').value = card.imagem_principal;
     document.getElementById('item-conteudo').value = card.conteudo || "";
+    
+    atualizarPreviewImagem();
+
+    document.getElementById('is-editing').value = card.id;
+    document.getElementById('item-id').setAttribute('readonly', true); 
+    
+    atracoesTemp = card.atracoes || [];
+    renderizarAtracoesTemp();
+
     document.getElementById('btn-salvar').innerText = "Atualizar Item";
-    document.getElementById('form-titulo').innerText = "Editar Item";
+    document.getElementById('btn-salvar').classList.remove('btn-success');
+    document.getElementById('btn-salvar').classList.add('btn-warning');
+    document.getElementById('form-titulo').innerText = `Editando ID: ${card.id}`;
+    
     window.scrollTo(0, 0);
+}
+
+function limparFormulario() {
+    document.getElementById('form-cadastro').reset();
+    
+    document.getElementById('item-id').value = ''; 
+    document.getElementById('item-categoria').value = '';
+    document.getElementById('is-editing').value = '';
+    document.getElementById('item-id').removeAttribute('readonly'); 
+    
+    const preview = document.getElementById('preview-img-principal');
+    if(preview) preview.style.opacity = '0';
+
+    atracoesTemp = [];
+    renderizarAtracoesTemp();
+
+    document.getElementById('btn-salvar').innerText = "Cadastrar Item";
+    document.getElementById('btn-salvar').classList.remove('btn-warning');
+    document.getElementById('btn-salvar').classList.add('btn-success');
+    document.getElementById('form-titulo').innerText = "Novo Cadastro";
 }
 
 async function excluirItem(id) {
@@ -240,13 +445,13 @@ async function excluirItem(id) {
             });
 
             if (response.ok) {
-                let favoritos = getFavoritos();
-                if(favoritos.includes(id)) {
-                    toggleFavorito(id);
-                }
-                
+                // Remove dos favoritos de qualquer lista possível que esteja na memória
+                // (Essa parte é mais complexa em local storage separado, mas o item não existirá mais)
                 alert('Item excluído!');
-                carregarDados();
+                await carregarDados(); 
+                if (document.getElementById('tabela-itens-body')) {
+                    gerarTabelaGerenciamento();
+                }
             } else {
                 alert('Erro ao excluir.');
             }
@@ -256,23 +461,11 @@ async function excluirItem(id) {
     }
 }
 
-function limparFormulario() {
-    document.getElementById('form-cadastro').reset();
-    document.getElementById('item-id').value = ''; 
-    document.getElementById('btn-salvar').innerText = "Cadastrar Item";
-    document.getElementById('form-titulo').innerText = "Novo Cadastro";
-}
+// --- 7. Gerais (Pesquisa, Gráfico) ---
 
 function acaoFavoritar(id, isPageFavoritos = false) {
+    // Redireciona para a função principal que já tem a proteção de login
     toggleFavorito(id);
-    if (isPageFavoritos) {
-        gerarFavoritos();
-    } else {
-        atualizarBotoesFavorito();
-        if(window.location.pathname.includes("detalhes.html")) {
-            mostrarDetalhe();
-        }
-    }
 }
 
 function atualizarBotoesFavorito() {
@@ -318,13 +511,12 @@ function realizarBusca(termo) {
 
 function gerarGraficoDashboard() {
     const ctx = document.getElementById('grafico-itens');
-    
     if (!ctx) return; 
 
     const contagemCategorias = {};
 
     dados.cards.forEach(card => {
-        const categoria = card.categoria || 'Sem Categoria';
+        const categoria = card.categoria || 'Outros';
         if (contagemCategorias[categoria]) {
             contagemCategorias[categoria]++;
         } else {
@@ -336,25 +528,18 @@ function gerarGraficoDashboard() {
     const dataValues = Object.values(contagemCategorias); 
 
     const existingChart = Chart.getChart(ctx);
-    if (existingChart) {
-        existingChart.destroy();
-    }
+    if (existingChart) existingChart.destroy();
 
     new Chart(ctx, {
         type: 'doughnut', 
         data: {
             labels: labels,
             datasets: [{
-                label: 'Quantidade de Itens',
+                label: 'Itens',
                 data: dataValues,
                 backgroundColor: [
-                    '#FF6384', 
-                    '#36A2EB', 
-                    '#FFCE56', 
-                    '#4BC0C0', 
-                    '#9966FF',
-                    '#FF9F40', 
-                    '#C9CBCF'  
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+                    '#9966FF', '#FF9F40', '#C9CBCF'  
                 ],
                 borderWidth: 1
             }]
@@ -363,19 +548,15 @@ function gerarGraficoDashboard() {
             responsive: true,
             maintainAspectRatio: false, 
             plugins: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        boxWidth: 20,
-                        padding: 15
-                    }
-                },
+                legend: { position: 'right', labels: { boxWidth: 20, padding: 15 } },
+                title: { display: true, text: 'Acervo por Categoria' }
             }
         }
     });
 }
 
 function inicializarPagina() {
+    verificarSessao();
     const path = window.location.pathname;
 
     if (path.includes("index.html") || path === "/" || path.endsWith("/")) {

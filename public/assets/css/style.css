@@ -6,92 +6,107 @@
 
 body {
     background-color: #0b0a0f;
-    color: #e4d9ff;
+    color: #ffffff; /* MUDANÇA: Texto base agora é branco */
     font-family: "Spectral", serif;
-    margin: 12px;
-    padding: 0;
+    margin: 0; 
+    padding: 12px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Faz o conteúdo principal crescer e empurrar o footer */
+main, .container {
+    flex: 1;
+    width: 100%;
 }
 
 a {
     text-decoration: none;
-    color: #b086f7;
+    color: #b086f7; /* Links mantêm o roxo para destaque */
+    transition: color 0.3s ease;
 }
 
 a:hover {
-    color: #d1aaff;
+    color: #ffffff; /* Ao passar o mouse, fica branco */
+    text-shadow: 0 0 5px #b086f7;
 }
 
-/*Cabeçalho*/
+/* --- CABEÇALHO --- */
 header {
     display: flex;
     align-items: center;
     gap: 15px;
-    background: rgba(20, 20, 20, 0.9);
+    background: rgba(20, 20, 20, 0.95);
     padding: 20px;
     position: sticky;
     top: 0;
     z-index: 1000;
     border-bottom: 2px solid #9d4edd;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
 }
 
 header h1 {
     margin-bottom: 0;
     font-size: 2rem;
-    color: #e0aaff;
+    color: #ffffff; /* MUDANÇA: Título branco */
     text-shadow: 0 0 10px #9d4edd;
     font-family: "Cinzel", serif;
 }
 
 .nav-link {
-    color: #ffffff !important; 
-    transition: color 0.3s ease;
+    color: #ffffff !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
 .nav-link:hover {
-    color: #d690fe !important; 
+    color: #d690fe !important;
+    text-shadow: 0 0 8px #d690fe;
 }
-/*logo do site*/
+
 .logo {
     width: 50px;
     height: auto;
 }
 
-/*Carrossel*/
+/* --- CARROSSEL --- */
 .carousel-inner img {
     height: 400px;
     object-fit: cover;
+    border-radius: 8px;
 }
 
 .carousel-caption {
-    background-color: rgba(0, 0, 0, 0.6);
-    color: #f8f9fa;
+    background-color: rgba(11, 10, 15, 0.9);
+    color: #ffffff;
     padding: 1rem;
     border-radius: 0.5rem;
+    border: 1px solid #3d2b54;
 }
 
 .carousel-indicators button {
-    background-color: #212529;
+    background-color: #9d4edd;
 }
 
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    background-color: #212529;
-    border-radius: 50%;
-}
-
-/*Cards*/
+/* --- CARDS DA HOME --- */
 #cards-container .card {
     height: 100%;
     display: flex;
     flex-direction: column;
-    transition: 0.2s;
+    transition: 0.3s;
     border-radius: 10px;
     overflow: hidden;
+    background-color: #160d24;
+    border: 1px solid #3d2b54;
+    color: #ffffff; /* Texto card branco */
 }
 
 #cards-container .card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(157, 78, 221, 0.3);
+    border-color: #9d4edd;
 }
 
 #cards-container .card-img-top {
@@ -109,35 +124,52 @@ header h1 {
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
+    color: #ffffff; /* Título card branco */
+    font-family: "Cinzel", serif;
 }
 
 #cards-container .card-text {
     flex: 1;
     font-size: 0.95rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    color: #e0e0e0; /* Cinza bem claro para texto longo */
 }
 
-#cards-container .btn-primary {
-    background-color: #280054;
-    border-color: #212529;
+/* Botões */
+.btn-primary, .btn-custom-primary {
+    background-color: #4a148c;
+    border-color: #6a1b9a;
+    color: white;
 }
 
-#cards-container .btn-primary:hover {
-    background-color: #343a40;
-    border-color: #343a40;
+.btn-primary:hover, .btn-custom-primary:hover {
+    background-color: #7b1fa2;
+    border-color: #8e24aa;
+    box-shadow: 0 0 10px rgba(123, 31, 162, 0.5);
 }
 
-/*Página de detalhes*/
+.btn-outline-danger {
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+}
+
+.btn-outline-danger:hover {
+    background-color: #ff6b6b;
+    color: white;
+}
+
+/* --- PÁGINA DE DETALHES --- */
 #detalhe-card {
     background-color: #0f0a18;
     border-radius: 20px;
-    box-shadow: 0 0 25px rgba(128, 0, 255, 0.3);
+    box-shadow: 0 0 25px rgba(128, 0, 255, 0.2);
+    border: 1px solid #3d2b54;
     padding: 40px;
     max-width: 1100px;
     margin: 40px auto;
 }
 
-#detalhe-card>div {
+#detalhe-card > div {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -149,9 +181,10 @@ header h1 {
     width: 420px;
     height: auto;
     border-radius: 12px;
-    box-shadow: 0 0 25px rgba(166, 113, 255, 0.4);
+    box-shadow: 0 0 15px rgba(166, 113, 255, 0.2);
+    border: 1px solid #3d2b54;
     flex-shrink: 0;
-    margin-top: 40px;
+    margin-top: 20px;
 }
 
 #detalhe-card .conteudo {
@@ -160,14 +193,15 @@ header h1 {
 
 #detalhe-card h2,
 #detalhe-card h3 {
-    color: #e0aaff;
+    color: #ffffff; /* MUDANÇA: Branco */
     font-size: 2rem;
     margin-bottom: 10px;
     font-family: "Cinzel", serif;
+    text-shadow: 0 0 5px rgba(157, 78, 221, 0.5);
 }
 
 #detalhe-card p {
-    color: white;
+    color: #f0f0f0; /* Quase branco */
     line-height: 1.7;
 }
 
@@ -180,23 +214,21 @@ header h1 {
     font-weight: bold;
     text-decoration: none;
     transition: all 0.3s ease;
+    border: 1px solid #9d4edd;
 }
 
 .btn-detalhe:hover {
     background: #b366ff;
-    box-shadow: 0 0 10px #b366ff;
-}
-
-/*Fotos relacionadas aos cards*/
-#fotos-associadas {
-    padding-left: 15px;
-    padding-right: 15px;
+    box-shadow: 0 0 15px #b366ff;
+    color: white;
 }
 
 #fotos-associadas .card {
+    background-color: #160d24;
+    border: 1px solid #3d2b54;
+    color: #fff;
     border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 1rem;
 }
 
 #fotos-associadas .card-img-top {
@@ -204,132 +236,165 @@ header h1 {
     object-fit: cover;
 }
 
-/*ajuste nos cards para seções internas*/
-#detalhe-card .card {
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 2rem;
+/* --- LOGIN E CADASTRO --- */
+body.register-page,
+body.login-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #0b0a0f;
+    padding: 20px;
 }
 
-#detalhe-card h3 {
+.card-register,
+.card-login {
+    width: 100%;
+    border: 1px solid #9d4edd;
+    background-color: #0f0a18;
+    color: #ffffff; /* MUDANÇA: Texto branco puro */
+    box-shadow: 0 0 20px rgba(128, 0, 255, 0.15);
+    border-radius: 15px;
+    flex-grow: 0; 
+}
+
+.card-register {
+    max-width: 500px;
+}
+
+.card-login {
+    max-width: 400px;
+}
+
+/* Títulos do Login */
+.card-login h3, .card-register h3 {
+    font-family: "Cinzel", serif;
+    color: #ffffff; /* MUDANÇA: Branco */
+    text-shadow: 0 0 10px rgba(157, 78, 221, 0.8); /* Glow roxo no texto branco */
+}
+
+/* Ajuste para textos pequenos (ex: "Bem-vindo de volta") */
+.text-muted {
+    color: #d1d5db !important; /* Cinza claro bem legível */
+}
+
+/* Inputs */
+.form-control {
+    background-color: #160d24;
+    border: 1px solid #3d2b54;
+    color: #ffffff; /* Texto digitado branco */
+}
+
+.form-control:focus {
+    background-color: #1c102e;
+    border-color: #9d4edd;
+    color: #ffffff;
+    box-shadow: 0 0 8px rgba(157, 78, 221, 0.6);
+}
+
+.form-control::placeholder {
+    color: #cccccc; /* MUDANÇA: Placeholder cinza claro (antes era roxo escuro) */
+    opacity: 0.7;
+}
+
+/* Labels dos formulários */
+.form-label {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* Botões Auth */
+.btn-custom-primary, .btn-success {
+    background-color: #8a2be2 !important;
+    border-color: #7a1cd1 !important;
+    color: white;
+    font-family: "Cinzel", serif;
     font-weight: bold;
-    margin-bottom: 1rem;
 }
 
-#detalhe-card p {
-    line-height: 1.6;
+.btn-custom-primary:hover, .btn-success:hover {
+    background-color: #9d4edd !important;
+    box-shadow: 0 0 10px #9d4edd;
+    color: white;
 }
 
-#detalhe-card .btn-lg {
-    background-color: #212529;
-    border-color: #212529;
+.btn-custom-secondary {
+    background-color: transparent;
+    border-color: #9ca3af;
+    color: #e5e7eb; /* Texto quase branco */
 }
 
-#detalhe-card .btn-lg:hover {
-    background-color: #343a40;
-    border-color: #343a40;
+.btn-custom-secondary:hover {
+    background-color: #241836;
+    border-color: #9d4edd;
+    color: white;
 }
 
-/*Rodapé*/
+/* --- RODAPÉ --- */
 footer {
     background-color: #160d24;
     color: #bca6e4;
     text-align: center;
-    padding: 15px;
+    padding: 20px;
     margin-top: 50px;
     border-top: 1px solid #3d2b54;
+    width: 100%;
 }
 
-/*seção "sobre mim"*/
+/* --- OUTROS --- */
 .sobremim {
     text-align: justify;
-    color: white;
+    color: #f0f0f0; /* MUDANÇA: Quase branco */
     padding: 10px;
 }
 
-/*ajustes gerais do conteúdo*/
 .conteudo {
     white-space: pre-line;
     text-align: justify;
     line-height: 1.6;
-    color: #ddd;
+    color: #f0f0f0; /* MUDANÇA: Quase branco */
     padding: 20px;
 }
 
-.detalhe-container img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin-bottom: 20px;
-    border-radius: 8px;
-}
-
-/*título das seções*/
 .mb-3.border-bottom.pb-2 {
-    color: white;
-    padding: 24px;
+    color: #ffffff; /* MUDANÇA: Branco */
+    padding-bottom: 10px !important;
+    border-bottom: 2px solid #3d2b54 !important;
 }
 
 .name {
     padding: 10px;
-    color: #b086f7;
+    color: #b086f7; /* Nomes em roxo claro */
+    font-family: "Cinzel", serif;
 }
 
-/*Responsividade*/
+/* Responsividade */
 @media (max-width: 992px) {
-
-    #detalhe-card>div {
+    #detalhe-card > div {
         flex-direction: column;
         align-items: center;
         gap: 20px;
     }
-
     #detalhe-card img {
         width: 100%;
         max-width: 400px;
         margin-top: 0;
     }
-
-    #detalhe-card h2,
-    #detalhe-card h3 {
-        font-size: 1.75rem;
+    #detalhe-card h2, #detalhe-card h3 {
         text-align: center;
     }
 }
 
 @media (max-width: 768px) {
-    .detalhe-container {
-
-        padding: 15px;
-        margin: 10px;
+    body {
+        padding: 0;
     }
-
-    .conteudo {
-        font-size: 15px;
+    header {
+        padding: 10px;
     }
-
-    header h1 {
-        font-size: 1.5rem;
-    }
-
     #detalhe-card {
         padding: 20px;
         margin: 20px 10px;
-        box-shadow: none;
-    }
-
-    #detalhe-card img {
-        margin-bottom: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    .conteudo {
-        font-size: 14px;
-    }
-
-    #detalhe-card h2,
-    #detalhe-card h3 {
-        font-size: 1.5rem;
     }
 }
