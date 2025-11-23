@@ -1,0 +1,23 @@
+{
+  "name": "trabalhopratico2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "json-server --watch db/db.json --port 3000 --static ./public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnnyVictoryaAzevedoOliveira/trabalhopratico2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AnnyVictoryaAzevedoOliveira/trabalhopratico2/issues"
+  },
+  "homepage": "https://github.com/AnnyVictoryaAzevedoOliveira/trabalhopratico2#readme",
+  "dependencies": {
+    "json-server": "^0.17.4"
+  }
+}
