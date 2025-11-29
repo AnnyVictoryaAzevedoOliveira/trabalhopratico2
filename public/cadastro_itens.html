@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,10 +38,10 @@
 
     <main class="container my-5">
         <h2 class="mb-3 border-bottom pb-2" id="form-titulo">Novo Cadastro</h2>
-        
+
         <section id="form-cadastro-section" class="mb-5">
             <form id="form-cadastro">
-                
+
                 <input type="hidden" id="is-editing">
 
                 <div class="row g-3">
@@ -53,10 +54,11 @@
                         <label for="item-nome" class="form-label">Nome do Item</label>
                         <input type="text" class="form-control" id="item-nome" required>
                     </div>
-                    
+
                     <div class="col-md-4">
                         <label for="item-categoria" class="form-label">Categoria</label>
-                        <select class="form-select" id="item-categoria" required style="background-color: #160d24; border: 1px solid #3d2b54; color: white;">
+                        <select class="form-select" id="item-categoria" required
+                            style="background-color: #160d24; border: 1px solid #3d2b54; color: white;">
                             <option value="" selected disabled>Selecione...</option>
                             <option value="Sistemas de RPG">Sistemas de RPG</option>
                             <option value="Guias e Tutoriais">Guias e Tutoriais</option>
@@ -70,7 +72,17 @@
 
                     <div class="col-12">
                         <label for="item-imagem" class="form-label">Link da Imagem Principal</label>
-                        <input type="url" class="form-control" id="item-imagem" placeholder="https://exemplo.com/imagem.jpg" required>
+                        <input type="url" class="form-control" id="item-imagem"
+                            placeholder="https://exemplo.com/imagem.jpg" required oninput="atualizarPreviewImagem()">
+
+                        <small class="form-text text-muted" style="color: #bbb !important;">
+                            Importante: Use o link direto da imagem (deve terminar em .jpg, .png, etc.), obtido
+                            clicando com o botão direito na imagem e escolhendo "Copiar endereço da imagem".
+                        </small>
+
+                        <img id="preview-img-principal" src="" alt="Pré-visualização da Imagem Principal"
+                            class="img-fluid mt-2 rounded"
+                            style="max-height: 200px; object-fit: cover; opacity: 0; transition: opacity 0.5s;">
                     </div>
 
                     <div class="col-12">
@@ -86,20 +98,25 @@
                     <div class="col-12 mt-4">
                         <div class="card" style="background-color: #160d24; border: 1px solid #9d4edd; color: #fff;">
                             <div class="card-body">
-                                <h6 class="card-title fw-bold mb-3" style="color: #e0aaff; font-family: 'Cinzel', serif;">Galeria de Fotos</h6>
-                                <p class="small text-muted mb-3">Adicione fotos extras que aparecerão nos detalhes do item.</p>
-                                
+                                <h6 class="card-title fw-bold mb-3"
+                                    style="color: #e0aaff; font-family: 'Cinzel', serif;">Galeria de Fotos</h6>
+                                <p class="small text-muted mb-3">Adicione fotos extras que aparecerão nos detalhes do
+                                    item.</p>
+
                                 <div class="row g-2 align-items-end">
                                     <div class="col-md-5">
                                         <label class="form-label small">URL da Imagem Extra</label>
-                                        <input type="url" class="form-control form-control-sm" id="atracao-url" placeholder="http://...">
+                                        <input type="url" class="form-control form-control-sm" id="atracao-url"
+                                            placeholder="http://...">
                                     </div>
                                     <div class="col-md-5">
                                         <label class="form-label small">Legenda/Descrição</label>
-                                        <input type="text" class="form-control form-control-sm" id="atracao-desc" placeholder="Ex: Vista lateral">
+                                        <input type="text" class="form-control form-control-sm" id="atracao-desc"
+                                            placeholder="Ex: Vista lateral">
                                     </div>
                                     <div class="col-md-2">
-                                        <button type="button" class="btn btn-success btn-sm w-100" onclick="adicionarAtracaoTemp()">+ Adicionar</button>
+                                        <button type="button" class="btn btn-success btn-sm w-100"
+                                            onclick="adicionarAtracaoTemp()">+ Adicionar</button>
                                     </div>
                                 </div>
 
@@ -119,15 +136,16 @@
         </section>
 
         <h2 class="mb-3 border-bottom pb-2">Itens Cadastrados</h2>
-        
+
         <section id="listagem-itens">
             <div class="table-responsive">
-                <table class="table table-striped table-dark align-middle" style="--bs-table-bg: #160d24; --bs-table-striped-bg: #1c102e;">
+                <table class="table table-striped table-dark align-middle"
+                    style="--bs-table-bg: #160d24; --bs-table-striped-bg: #1c102e;">
                     <thead>
                         <tr>
                             <th scope="col" style="color: #e0aaff;">ID</th>
                             <th scope="col" style="color: #e0aaff;">Nome</th>
-                            <th scope="col" style="color: #e0aaff;">Categoria</th> 
+                            <th scope="col" style="color: #e0aaff;">Categoria</th>
                             <th scope="col" style="color: #e0aaff;">Imagem</th>
                             <th scope="col" style="color: #e0aaff;">Ações</th>
                         </tr>
@@ -144,6 +162,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/scripts/app.js"></script> 
+    <script src="assets/scripts/app.js"></script>
 </body>
+
 </html>

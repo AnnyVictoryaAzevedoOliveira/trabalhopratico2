@@ -231,19 +231,11 @@
     },
     {
       "login": "Audax_Virtus",
-      "senha": "Veridice@12",
-      "nome": "Audax Virtus ",
-      "email": "annyvictoryaaoliveira@gmail.com",
-      "admin": false,
-      "id": "9-BwGzq"
-    },
-    {
-      "login": "aud",
       "senha": "123",
-      "nome": "aud",
-      "email": "anny@gmail.com",
+      "nome": "Audax Virtus ",
+      "email": "audax@gmail.com",
       "admin": false,
-      "id": "X0UEbIg"
+      "id": "4nJiBjh"
     }
   ],
   "favoritos": []

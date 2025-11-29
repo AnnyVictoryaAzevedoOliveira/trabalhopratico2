@@ -2,8 +2,6 @@ const BASE_URL = 'http://localhost:3000';
 let dados = { cards: [] };
 let atracoesTemp = []; 
 
-// --- 1. Sessão e Interface ---
-
 function verificarSessao() {
     const usuarioLogado = JSON.parse(sessionStorage.getItem('usuarioLogado'));
     
@@ -53,16 +51,11 @@ function gerenciarLoginLogout() {
     }
 }
 
-// --- 2. Favoritos (LÓGICA ATUALIZADA POR USUÁRIO) ---
-
-// Função auxiliar para pegar a chave correta no LocalStorage
 function getChaveFavoritos() {
     const usuarioLogado = JSON.parse(sessionStorage.getItem('usuarioLogado'));
     if (usuarioLogado && usuarioLogado.id) {
-        // Se tem usuário, cria uma chave única com o ID dele (ex: favoritos_user_123)
         return `favoritos_user_${usuarioLogado.id}`;
     }
-    // Se não tem usuário logado, usa uma chave genérica de visitante
     return 'favoritos_visitante';
 }
 
@@ -77,7 +70,6 @@ function salvarFavoritos(listaIds) {
 }
 
 function toggleFavorito(id) {
-    // Verifica se está logado antes de deixar favoritar
     const usuarioLogado = sessionStorage.getItem('usuarioLogado');
     if (!usuarioLogado) {
         alert("Você precisa fazer login para adicionar aos favoritos!");
@@ -89,15 +81,14 @@ function toggleFavorito(id) {
     const index = favoritos.indexOf(id);
     
     if (index !== -1) {
-        favoritos.splice(index, 1); // Remove
+        favoritos.splice(index, 1); 
     } else {
-        favoritos.push(id); // Adiciona
+        favoritos.push(id); 
     }
     
     salvarFavoritos(favoritos);
     atualizarBotoesFavorito();
     
-    // Se estiver na página de favoritos, recarrega a lista imediatamente
     if(window.location.pathname.includes("favoritos.html")) {
         gerarFavoritos();
     }
@@ -107,8 +98,6 @@ function verificarFavorito(id) {
     const favoritos = getFavoritos();
     return favoritos.includes(id);
 }
-
-// --- 3. Carregamento ---
 
 async function carregarDados() {
     try {
@@ -123,8 +112,6 @@ async function carregarDados() {
         console.error("Erro ao buscar dados:", error);
     }
 }
-
-// --- 4. Renderização ---
 
 function gerarCards(lista = dados.cards) {
     const container = document.getElementById('cards-container');
@@ -248,16 +235,24 @@ function mostrarDetalhe() {
     }
 }
 
-// --- 5. Gerenciamento de Fotos (Galeria) ---
-
 function atualizarPreviewImagem() {
     const input = document.getElementById('item-imagem');
     const preview = document.getElementById('preview-img-principal');
     if (input && preview) {
-        preview.style.opacity = '1';
-        preview.src = input.value;
+        preview.src = input.value; 
+        if (input.value) {
+            preview.style.opacity = '1';
+        } else {
+            preview.style.opacity = '0';
+        }
         preview.onerror = function() {
             this.style.opacity = '0';
+        }
+    
+        preview.onload = function() {
+            if (input.value) {
+                this.style.opacity = '1';
+            }
         }
     }
 }
@@ -306,8 +301,6 @@ function renderizarAtracoesTemp() {
         lista.appendChild(li);
     });
 }
-
-// --- 6. CRUD ---
 
 function gerarTabelaGerenciamento() {
     const tbody = document.getElementById('tabela-itens-body');
@@ -426,7 +419,10 @@ function limparFormulario() {
     document.getElementById('item-id').removeAttribute('readonly'); 
     
     const preview = document.getElementById('preview-img-principal');
-    if(preview) preview.style.opacity = '0';
+    if(preview) {
+        preview.style.opacity = '0';
+        preview.src = '';
+    }
 
     atracoesTemp = [];
     renderizarAtracoesTemp();
@@ -445,8 +441,6 @@ async function excluirItem(id) {
             });
 
             if (response.ok) {
-                // Remove dos favoritos de qualquer lista possível que esteja na memória
-                // (Essa parte é mais complexa em local storage separado, mas o item não existirá mais)
                 alert('Item excluído!');
                 await carregarDados(); 
                 if (document.getElementById('tabela-itens-body')) {
@@ -461,10 +455,7 @@ async function excluirItem(id) {
     }
 }
 
-// --- 7. Gerais (Pesquisa, Gráfico) ---
-
 function acaoFavoritar(id, isPageFavoritos = false) {
-    // Redireciona para a função principal que já tem a proteção de login
     toggleFavorito(id);
 }
 
